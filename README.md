@@ -1,226 +1,290 @@
-
 <div align="center">
 
-<img src="https://img.shields.io/github/stars/hotaro6754/ZeroSlop?style=for-the-badge&logo=github&color=gold" alt="Stars"/>
-<img src="https://img.shields.io/badge/Methodology-AI%20Quality%20Gates-blue?style=for-the-badge" alt="Methodology"/>
-<img src="https://img.shields.io/badge/Made%20with-Obsession-red?style=for-the-badge&logo=heart" alt="Made with Obsession"/>
-<img src="https://img.shields.io/badge/Hackathon%20Survival-100%25-success?style=for-the-badge" alt="Hackathon Survival"/>
-
-<br/><br/>
-
-<img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=800&size=28&duration=3000&pause=1000&color=FF6B6B&center=true&vCenter=true&width=800&lines=You+spend+20+hours+building...;The+judge+walks+over...;You+click+the+button...;NOTHING+HAPPENS.;ZeroSlop+fixes+that." alt="Typing Animation"/>
-
-<br/>
-
-<h1>
-  <img src="https://img.shields.io/badge/ZEROSLOP-No%20More%20Slop.-black?style=flat-square&logo=target&logoColor=FF6B6B" width="400" alt="ZeroSlop Badge"/>
-</h1>
-
-<p><strong>A structured development methodology that forces AI to ship quality, not slop.</strong></p>
-
-<p>
-  <a href="#quick-start">🚀 Quick Start</a> •
-  <a href="#the-pipeline">Pipeline</a> •
-  <a href="#gates">Quality Gates</a> •
-  <a href="#adapters">Adapters</a> •
-  <a href="#contributing">Contribute</a>
-</p>
-
-<img src="https://img.shields.io/badge/Works%20With-Claude%20|%20GPT--4%20|%20Gemini%20|%20Cursor-purple?style=flat-square" alt="AI Support"/>
+![Stars](https://img.shields.io/github/stars/hotaro6754/ZeroSlop?style=flat-square&color=gold)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
+![Works With](https://img.shields.io/badge/works%20with-Claude%20%7C%20GPT--4%20%7C%20Gemini%20%7C%20Cursor-8b5cf6?style=flat-square)
 
 </div>
 
----
+# ZeroSlop
 
-## 🔥 The Problem (Every Hackathon Dev Knows This)
+You spend 20 hours building. The UI looks clean. The features are there. The demo flow is rehearsed. The judge walks over. You click the button. Nothing happens.
 
-<div align="center">
+Three hackathons. Every project vibecoded. Every demo broke when it mattered.
 
-| Without ZeroSlop | With ZeroSlop |
-|:---:|:---:|
-| Form submits to nowhere | Every input has a destination |
-| `$_SESSION['user_id']` invented by AI | Uses your actual `$_SESSION['roll_no']` |
-| Inter + purple gradient (again) | Category-appropriate design system |
-| Hardcoded DB password in handler | Zero hardcoded credentials |
-| Works on localhost only | Production-ready from commit 1 |
-| **Demo dies when judge arrives** | **Judge sees it actually work** |
+Not because AI is bad at building. Because AI has no judgment about what it builds.
 
-</div>
+It ships. It calls things done. It moves on.
 
-> *"Three hackathons. Everything vibecoded. Judge walks over, something breaks. Spent months blaming the prompts. The prompts were fine. The AI just had no mechanism to check whether what it built actually worked."*
-> 
-> **— Harshith, Creator of ZeroSlop**
+**zeroslop fixes that.**
 
 ---
 
-## ⚡ What Makes This Different
+## What actually happens when you vibe code under pressure
 
-**Not a SaaS. Not a CLI. Not a wrapper.**
+You have 24 hours. You're moving fast. By hour 20 the demo looks incredible.
 
-ZeroSlop is a **methodology you clone into your IDE**. The AI reads the files, then operates with a full quality pipeline running on everything it builds.
+Then the judge walks over.
+
+- Form submits to nowhere — no handler, no DB write, just silence
+- Backend built. Frontend built. Never wired together.
+- Works on your machine. `localhost` hardcoded in a config value the AI invented.
+- Leaderboard showing numbers. Fake numbers. The table was never created.
+- Auth session variable the AI made up — your actual one is two files away, unused.
+- CORS errors, undefined references, missing responses — silent on the surface, on fire underneath.
+- API keys hardcoded in the frontend. Right there in devtools.
+- No error states. Failures look like success.
+- CSRF tokens on zero forms.
+- Mobile layout collapses at 375px. You find out in real time.
+- Inter font. Purple gradient on white. Identical to every other team in the room.
+- AI said it was done. Confidently. No caveats.
+
+The tools weren't wrong. The prompting wasn't wrong. The process had no gate between "written" and "actually works."
+
+---
+
+## What zeroslop is
+
+A structured development methodology you clone into your IDE.
+
+Not a SaaS. Not a CLI tool. Not a wrapper.
+
+You clone the repo. The AI reads the files. From that point it operates with a full pipeline — quality gates, self-scoring, design intelligence, codebase grounding — running on everything it builds.
+
+**Two pastes. Total transformation.**
 
 ```
+Paste 1 → zeroslop loads into your AI session
+          Generic assistant → full development pipeline
 
-┌─────────────────────────────────────────────────────────┐
-│  PASTE 1: ZeroSlop loads → Generic AI becomes           │
-│           full development pipeline with quality gates  │
-├─────────────────────────────────────────────────────────┤
-│  PASTE 2: Your codebase loads → AI enters GROUNDED MODE │
-│           Uses YOUR functions. YOUR auth. YOUR schema.  │
-│           Never invents. Never assumes.                 │
-└─────────────────────────────────────────────────────────┘
-
+Paste 2 → Your codebase loads
+          AI enters GROUNDED MODE
+          Builds YOUR code — not invented code
 ```
 
 ---
 
-## 🎯 The Core Loop
+## The core loop
 
 ```mermaid
 graph LR
     A[BUILD] --> B[SCORE]
     B --> C{≥ 70/100?}
-    C -->|No| D[IDENTIFY FAILURES]
-    D --> E[REBUILD]
-    E --> B
-    C -->|Yes| F[SHIP]
-    
-    style A fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
-    style F fill:#51cf66,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#ffd43b,stroke:#333,stroke-width:2px
+    C -->|No| D[REBUILD]
+    D --> A
+    C -->|Yes| E[SHIP]
+
+    style A fill:#1e1e2e,stroke:#ff6b6b,color:#ff6b6b
+    style B fill:#1e1e2e,stroke:#ffd43b,color:#ffd43b
+    style C fill:#1e1e2e,stroke:#aaa,color:#fff
+    style D fill:#1e1e2e,stroke:#ff6b6b,color:#ff6b6b
+    style E fill:#1e1e2e,stroke:#51cf66,color:#51cf66
 ```
 
-Below 70 = rebuild. Not patch. Rebuild. This is what no other AI tool enforces.
+After every feature, the AI scores its own output across six dimensions.
+
+```
+┌─────────────────────────────────────────────┐
+│ ZEROSLOP SELF-SCORE: [Feature Name]         │
+│                                             │
+│ Backend:      __/25   Frontend:   __/20     │
+│ Data:         __/15   Connect:    __/15     │
+│ Quality:      __/15   Evidence:   __/10     │
+│                                             │
+│ TOTAL:        __/100                        │
+│                                             │
+│ Honest notes: [what is weak or incomplete]  │
+└─────────────────────────────────────────────┘
+```
+
+**Below 70 = rebuild. Not a patch. Rebuild.**
+
+This sounds obvious. No AI tool enforces it without zeroslop. They patch. They bandage. They keep adding to broken foundations.
 
 ---
 
-🏭 The 8-Stage Pipeline
+## Before / after
 
-Stage	Purpose	Output	
-1. COLD-READ	Ingest your codebase DNA	GROUNDED MODE activated	
-2. SCOUT	Research competitors & APIs	MARKET-INTEL report	
-2b. DESIGN-SCOUT	Study category design patterns	Locked design system	
-3. VALIDATE	Check moat & feasibility	BUILD / PIVOT / STOP verdict	
-4. INTERROGATE	7 surgical architecture questions	Binary decision tree	
-5. RATE	Score complexity & risks	Phase plan with timelines	
-6. ORCHESTRATE	Agent dependency graph	Execution order locked	
-7. EXECUTE	Build under strict rules	No stubs. No TODOs.	
-8. FINE-TUNE	1000x consistency pass	Code indistinguishable from legacy	
+Same prompt. Same AI. Different system.
+
+| | Without zeroslop | With zeroslop |
+|---|---|---|
+| **Schema** | Invents a random DB schema | Uses your actual table: `roll_no, full_name, email, password_hash, branch, batch` |
+| **Auth** | `$_SESSION['user_id']` — doesn't exist here | `$_SESSION['roll_no']` — exactly as your auth pattern shows |
+| **DB** | Password hardcoded in handler | `getDB()` from `config.php`, zero hardcoded credentials |
+| **Security** | No CSRF token | CSRF token, PDO prepared statements |
+| **Design** | Inter + purple gradient on white | Category design system — not defaults |
+| **Utilities** | Ignores your helpers | Calls `createNotification()`, `awardPoints()` — already in your repo |
+| **States** | No error handling | 5 visible states on every input |
+| **Mobile** | Breaks at 375px | Verified at 375px |
+| **Score** | 38/100 | 91/100 |
+| **Judge** | Next team. | It works. |
 
 ---
 
-🚪 The Four Gates 
+## The 8-stage pipeline
 
-Gate	Enforces	Catches	
-🔒 COMPLETENESS	Every input has destination	Ghost buttons, dead forms	
-🛡️ SECURITY	CSRF, PDO, no hardcoded keys	Auth bypass, SQL injection	
-🎨 DESIGN	Category-appropriate UI	Generic gradients, mobile breakage	
-🔄 REGRESSION	New code doesn't break old	Schema orphans, broken nav	
+| Stage | What it does | Output |
+|---|---|---|
+| **1 — COLD-READ** | Ingests your codebase DNA: schema, utilities, conventions, dead zones, auth pattern. Enters GROUNDED MODE. | Your functions. Your session keys. Your table names. Never invented. |
+| **2 — SCOUT** | Researches competitors, GitHub alternatives, APIs, market gaps. | MARKET-INTEL report before a line is written. |
+| **2b — DESIGN-SCOUT** | Detects your product category. Studies reference-class design. Reviews your existing UI. Finds every flaw. | Locked design system: colors, type, components, motion profile. |
+| **3 — VALIDATE** | Competitive matrix. Moat check. | Honest verdict: BUILD / PIVOT / STOP. |
+| **4 — INTERROGATE** | Max 7 surgical questions. Each one unlocks a specific architecture decision. Binary options — A changes 3 files, B changes 12. | No questions about business models. Only what changes real code. |
+| **5 — RATE** | Full requirement scoring before line one. Complexity, feasibility, risks, phase plan. | No "I didn't realize this would take 3 weeks" at week 3. |
+| **6 — ORCHESTRATE** | Agent dependency graph. DB → AUTH → BACKEND → UI → SECURITY → QA → FINE-TUNE. | Nothing starts until its dependency gates. Nothing ships without passing. |
+| **7 — EXECUTE** | Builds under strict rules. No stubs. No TODOs. No hardcoded credentials. Backend before frontend. Every external input validated. Every DB query uses prepared statements. | Shippable output. |
+| **8 — FINE-TUNE** | Repo-aware consistency pass. | New code becomes indistinguishable from code that's been in the project for 6 months. |
 
+---
+
+## The four gates
+
+Every feature passes through all four before it ships.
 Gates are not optional. Gates have no exceptions.
 
----
+```
+COMPLETENESS-GATE   Every input has a destination.
+                    Every button does something real.
+                    Every route returns something.
+                    Every error is handled visibly.
+                    At least 3 edge cases identified
+                    and handled.
 
-🚀 Quick Start 
+SECURITY-GATE       CSRF on all forms.
+                    PDO prepared statements on all queries.
+                    No hardcoded credentials anywhere.
+                    Auth enforced on all protected routes.
+                    IDOR checks on user-owned data.
 
-```bash
-# 1. Clone into your IDE workspace
-git clone https://github.com/hotaro6754/ZeroSlop.git
+DESIGN-GATE         Color system compliant.
+                    Typography locked to brief.
+                    Components match spec.
+                    Zero slop flags.
+                    Mobile verified at 375px.
+                    Signature element present — not generic.
 
-# 2. Open new AI session (Claude/GPT-4/Gemini/Cursor)
-
-# 3. Paste BOOT.md contents
-cat ZeroSlop/BOOT.md | pbcopy  # macOS
-# cat ZeroSlop/BOOT.md | xclip -selection clipboard  # Linux
-
-# 4. Paste your codebase or idea
-# 5. Watch it work with quality gates
+REGRESSION-GATE     New feature didn't break old features.
+                    Schema changes didn't orphan queries.
+                    Auth system still intact.
+                    Navigation still works end to end.
 ```
 
-No CLI. No config. Two pastes. Total transformation.
+---
+
+## The design intelligence layer
+
+Most AI frontend output is identical. Same Inter. Same purple gradient. Same cards.
+
+DESIGN-SCOUT fixes this permanently.
+
+1. Detects your product category (AI SaaS / Fintech / Healthcare / Campus / etc.)
+2. Studies reference-class design for that category — modal.com, fey.com, antimetal.com, composio.dev, silnahealth.com, and 40+ others organized by category
+3. Reviews your existing UI against that standard
+4. Runs a 12-dimension critique — specific, surgical, not "make it more modern"
+5. Produces a locked design system: exact CSS variables, font pair, component specs, motion profile
+6. Hands it to UI-AGENT which builds from brief, not from defaults
+
+**Before:** AI builds with Inter + purple gradient.
+**After:** AI builds with your product category's actual design language.
 
 ---
 
-🔌 Adapters 
+## Works on everything you're already using
 
-ZeroSlop wraps what you already use:
+zeroslop doesn't compete with other tools. It wraps them.
 
-Your Stack	ZeroSlop Adds	
-Cursor	COLD-READ + FINE-TUNE layer	
-Superpowers	Quality gates after each skill	
-GSD	Gates between each phase	
-Vanilla AI	Full pipeline standalone	
+```
+Already using superpowers?   zeroslop adds quality gates after each skill
+Already using GSD?           zeroslop adds gates between each phase
+Using Cursor?                zeroslop adds COLD-READ + FINE-TUNE layer
+Using nothing?               zeroslop works standalone
+```
 
-See `adapters/` folder for exact integration instructions.
-
----
-
-📊 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=hotaro6754/ZeroSlop&type=Date)](https://star-history.com/#hotaro6754/ZeroSlop&Date)
+The `adapters/` folder has exact integration instructions for each.
 
 ---
 
-🏆 Used By
+## Quick start
 
-If you're using ZeroSlop in production or hackathons, [add yourself!]
+```bash
+# Clone into your IDE workspace
+git clone https://github.com/hotaro6754/ZeroSlop.git
 
-- 🥇 Hackathon teams shipping demos that actually work
-- 🏢 Solo founders building MVPs without technical debt
-- 👥 Engineering teams adding quality gates to AI workflows
+# Open a new AI session (Claude / GPT-4 / Gemini / Cursor)
+
+# Copy BOOT.md
+cat ZeroSlop/BOOT.md | pbcopy          # macOS
+cat ZeroSlop/BOOT.md | xclip -sel clip # Linux
+
+# Paste into your AI session
+# Then paste your codebase or idea
+# Done
+```
+
+No CLI. No configuration. No setup beyond cloning.
+
+BOOT.md contains embedded versions of all protocols. One file is enough to start. The rest of the files deepen each stage when you need them.
 
 ---
 
-📁 Repository Structure
+## File structure
 
 ```
 zeroslop/
-├── BOOT.md                    ← Start here. One file = full pipeline.
+├── BOOT.md                    ← Start here. One file, full pipeline.
+├── README.md
+│
 ├── core/
 │   ├── 01-COLD-READ.md        ← Repo ingestion + GROUNDED MODE
 │   ├── 02-SCOUT.md            ← Market intelligence
-│   ├── 02b-DESIGN-SCOUT.md    ← Design intelligence layer
+│   ├── 02b-DESIGN-SCOUT.md    ← Design intelligence + UI critique
 │   ├── 03-VALIDATE.md         ← Idea validation + moat analysis
-│   ├── 04-INTERROGATE.md      ← Surgical pre-build questions
+│   ├── 04-INTERROGATE.md      ← Surgical pre-build questioning
 │   ├── 05-RATE.md             ← Requirement scoring
-│   └── 06-ORCHESTRATE.md      ← Agent dependency graph
+│   └── 06-ORCHESTRATE.md      ← Agent graph + task decomposition
+│
 ├── agents/
 │   ├── FINE-TUNE-AGENT.md     ← The 1000x consistency pass
 │   └── [DB, AUTH, UI, SECURITY, QA agents]
+│
 ├── gates/
 │   ├── COMPLETENESS-GATE.md   ← Every feature fully wired
-│   ├── SECURITY-GATE.md       ← 10 security checks
-│   ├── DESIGN-GATE.md         ← Slop detection
-│   └── REGRESSION-GATE.md     ← No breakage
-├── profiles/                  ← Category-specific design systems
-└── adapters/                  ← Cursor, GSD, standalone
+│   ├── SECURITY-GATE.md       ← 10 security checks per feature
+│   ├── DESIGN-GATE.md         ← Slop detection + spec compliance
+│   └── REGRESSION-GATE.md     ← New code doesn't break old code
+│
+├── profiles/
+│   ├── saas.md
+│   ├── campus-platform.md
+│   ├── fintech.md
+│   └── healthcare.md
+│
+└── adapters/
+    ├── cursor.md
+    ├── gsd.md
+    └── standalone.md
 ```
 
 ---
 
-🤝 Contributing 
+## Built by
 
-```bash
-# Found a gate bypass? Open an issue.
-# Built a new adapter? PR welcome.
-# Used it in a hackathon? Tell your story.
-```
+Harshith Gangaraju.
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![Good First Issues](https://img.shields.io/github/issues/hotaro6754/ZeroSlop/good%20first%20issue?style=flat-square&color=7CB9E8)](https://github.com/hotaro6754/ZeroSlop/issues)
+Three hackathons. Everything vibecoded. Judge walks over, something breaks.
 
----
+Spent a long time blaming the prompts. The prompts were fine.
 
-📜 License
+The AI just had no mechanism to check whether what it built actually worked.
 
-MIT © [Harshith Gangaraju](https://github.com/hotaro6754)
+zeroslop is the system I built so it never happens again. To me or anyone else.
 
 ---
 
-⭐ Star this repo if it saved your demo
-
-[🚀 Get Started](#quick-start) • [📖 Documentation](core/) • [🐛 Issues](../../issues)
-
-ZeroSlop — No more slop. Ship real things.
+*If this saves your next demo, star the repo.*
+*If something doesn't work for your setup, open an issue and tell me why.*
 
 ---
+
+*zeroslop — no more slop. ship real things.*
