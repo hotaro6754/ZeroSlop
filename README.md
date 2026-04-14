@@ -305,7 +305,6 @@ zeroslop/
 └── adapters/
     ├── cursor.md
     ├── gsd.md
-    ├── superpowers.md
     └── standalone.md
 ```
 
