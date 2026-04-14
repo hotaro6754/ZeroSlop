@@ -1,5 +1,4 @@
 
-```markdown
 <div align="center">
 
 <img src="https://img.shields.io/github/stars/hotaro6754/ZeroSlop?style=for-the-badge&logo=github&color=gold" alt="Stars"/>
