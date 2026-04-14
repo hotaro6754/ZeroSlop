@@ -1,4 +1,4 @@
-# zeroslop — 02b-DESIGN-SCOUT
+# zeroslop — 02-DESIGN-SCOUT
 > Activates after 02-SCOUT completes, before UI-AGENT begins.
 > Studies reference-class design. Diagnoses user's existing UI. 
 > Produces a surgical enhancement brief. UI-AGENT builds from this — not from defaults.
@@ -905,4 +905,4 @@ No defaults. No guessing. No generic.
 ---
 
 *zeroslop — 02b-DESIGN-SCOUT*
-*Part of the zeroslop methodology: github.com/harshithgangaraju/zeroslop*
+*Part of the zeroslop methodology: github.com/hotaro6754/ZeroSlop*
