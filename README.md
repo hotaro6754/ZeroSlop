@@ -163,7 +163,7 @@ See `adapters/` folder for exact integration instructions.
 
 🏆 Used By
 
-If you're using ZeroSlop in production or hackathons, [add yourself!](CONTRIBUTING.md)
+If you're using ZeroSlop in production or hackathons, [add yourself!]
 
 - 🥇 Hackathon teams shipping demos that actually work
 - 🏢 Solo founders building MVPs without technical debt
