@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroSlop — No More Slop. Ship Real Things.</title>
+<meta name="description" content="A structured development methodology that forces AI to ship quality, not slop. Quality gates, self-scoring, design intelligence — running on everything it builds.">
+<meta property="og:title" content="ZeroSlop — No More Slop. Ship Real Things.">
+<meta property="og:description" content="Three hackathons. Every demo broke. ZeroSlop fixes that.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #090909;
+    --surface: #111114;
+    --surface2: #18181d;
+    --border: #222228;
+    --border-bright: #333340;
+    --red: #ff3535;
+    --red-dim: #3d1212;
+    --green: #00e676;
+    --green-dim: #0a2e1a;
+    --amber: #ffbe0b;
+    --amber-dim: #2e2208;
+    --white: #f2f2f0;
+    --muted: #555560;
+    --muted2: #888896;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    height: 56px;
+    background: rgba(9,9,9,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted2);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--bg) !important;
+    background: var(--white);
+    padding: 0.45rem 1rem;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--amber) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem clamp(1.5rem, 8vw, 8rem) 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 55%;
+    height: 100%;
+    background: radial-gradient(ellipse at 80% 30%, rgba(255,53,53,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-kicker {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .hero-kicker::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .hero-headline {
+    font-family: var(--display);
+    font-size: clamp(4rem, 12vw, 10rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 2rem;
+  }
+
+  .hero-headline .strike {
+    position: relative;
+    color: var(--muted);
+  }
+
+  .hero-headline .strike::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 3px;
+    background: var(--red);
+    transform: translateY(-50%);
+  }
+
+  .hero-story {
+    max-width: 580px;
+    font-family: var(--body);
+    font-size: 1.1rem;
+    color: var(--muted2);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .hero-story p + p { margin-top: 1rem; }
+
+  .hero-story strong { color: var(--white); }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--white);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary:hover { background: var(--amber); }
+
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted2);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.2rem;
+  }
+
+  .btn-ghost:hover { color: var(--white); border-color: var(--white); }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: clamp(1.5rem, 8vw, 8rem);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hero-scroll-hint::after {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 3rem;
+    background: var(--border-bright);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem clamp(1.5rem, 8vw, 8rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .section-label::before {
+    content: attr(data-index);
+    color: var(--red);
+    font-size: 0.6rem;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    margin-bottom: 3rem;
+  }
+
+  /* PROBLEM SECTION */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .problem-grid { grid-template-columns: 1fr; }
+  }
+
+  .problem-col {
+    padding: 2.5rem;
+  }
+
+  .problem-col:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) {
+    .problem-col:first-child {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+  }
+
+  .problem-col-header {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-col-header.fail { color: var(--red); }
+  .problem-col-header.pass { color: var(--green); }
+
+  .failure-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted2);
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .failure-item.visible { opacity: 1; transform: translateX(0); }
+
+  .failure-item:last-child { border-bottom: none; }
+
+  .failure-item .marker {
+    flex-shrink: 0;
+    width: 1.2rem;
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .pass-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted2);
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .pass-item.visible { opacity: 1; transform: translateX(0); }
+
+  .pass-item:last-child { border-bottom: none; }
+
+  .pass-item .marker {
+    flex-shrink: 0;
+    width: 1.2rem;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* PASTES */
+  .pastes-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    max-width: 700px;
+    margin-top: 2rem;
+  }
+
+  .paste-block {
+    padding: 2rem 2.5rem;
+    position: relative;
+  }
+
+  .paste-block + .paste-block {
+    border-top: 1px solid var(--border);
+  }
+
+  .paste-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+  }
+
+  .paste-title {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .paste-desc {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+
+  .paste-desc strong { color: var(--green); }
+
+  .paste-arrow {
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    color: var(--border-bright);
+  }
+
+  /* SCORE CARD */
+  .scorecard-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .scorecard-section { grid-template-columns: 1fr; }
+  }
+
+  .scorecard {
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    font-family: var(--mono);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .scorecard-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .scorecard-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted2);
+  }
+
+  .scorecard-feature {
+    font-size: 0.7rem;
+    color: var(--amber);
+  }
+
+  .score-rows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .score-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .score-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .score-bar-wrap {
+    height: 4px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .score-bar {
+    height: 100%;
+    background: var(--amber);
+    width: 0%;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .score-val {
+    font-size: 0.8rem;
+    color: var(--white);
+  }
+
+  .scorecard-total {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .total-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted2);
+  }
+
+  .total-value {
+    font-family: var(--display);
+    font-size: 3.5rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: var(--green);
+    transition: color 0.5s;
+  }
+
+  .total-value.low { color: var(--red); }
+
+  .scorecard-verdict {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid;
+    text-align: center;
+  }
+
+  .scorecard-verdict.pass {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .scorecard-verdict.fail {
+    border-color: var(--red);
+    color: var(--red);
+    background: var(--red-dim);
+  }
+
+  .scorecard-notes {
+    margin-top: 1rem;
+    font-size: 0.68rem;
+    color: var(--muted2);
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .score-toggle-wrap {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+  }
+
+  .score-toggle {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .score-toggle.active {
+    background: var(--surface2);
+    color: var(--white);
+  }
+
+  .score-toggle.active.fail-btn { color: var(--red); }
+  .score-toggle.active.pass-btn { color: var(--green); }
+
+  .scorecard-text {
+    font-size: 1rem;
+    color: var(--muted2);
+    line-height: 1.8;
+    font-family: var(--body);
+  }
+
+  .scorecard-text strong { color: var(--white); }
+
+  /* PIPELINE */
+  .pipeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .pipeline-item {
+    display: grid;
+    grid-template-columns: 3rem 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .pipeline-item:last-child { border-bottom: none; }
+  .pipeline-item:hover { background: var(--surface); }
+
+  .pipeline-num {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.5rem 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+  }
+
+  .pipeline-content {
+    padding: 1.5rem 2rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .pipeline-stage-name {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .pipeline-desc {
+    font-family: var(--body);
+    font-size: 0.88rem;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+
+  .pipeline-output {
+    padding: 1.5rem 2rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.7;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 768px) {
+    .pipeline-item { grid-template-columns: 2.5rem 1fr; }
+    .pipeline-output { display: none; }
+  }
+
+  /* GATES */
+  .gates-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .gates-grid { grid-template-columns: 1fr; }
+  }
+
+  .gate-card {
+    padding: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .gate-card:hover { background: var(--surface); }
+
+  .gate-card:nth-child(2n) { border-right: none; }
+  .gate-card:nth-child(3), .gate-card:nth-child(4) { border-bottom: none; }
+
+  @media (max-width: 768px) {
+    .gate-card { border-right: none; }
+    .gate-card:last-child { border-bottom: none; }
+    .gate-card:nth-child(3) { border-bottom: 1px solid var(--border); }
+  }
+
+  .gate-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .gate-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--border-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted2);
+    flex-shrink: 0;
+  }
+
+  .gate-name {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .gate-status {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--green);
+    background: var(--green-dim);
+    padding: 0.2rem 0.6rem;
+    margin-left: auto;
+    border: 1px solid rgba(0,230,118,0.2);
+  }
+
+  .gate-checks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .gate-checks li {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted2);
+    display: flex;
+    gap: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .gate-checks li::before {
+    content: '—';
+    color: var(--border-bright);
+    flex-shrink: 0;
+  }
+
+  /* DESIGN INTEL */
+  .design-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    counter-reset: step;
+    margin-top: 2rem;
+  }
+
+  .design-step {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .design-step:last-child { border-bottom: none; }
+
+  .design-step-num {
+    flex-shrink: 0;
+    width: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-size: 2rem;
+    color: var(--border-bright);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+  }
+
+  .design-step-content {
+    padding: 1.5rem 2rem;
+  }
+
+  .design-step-title {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--amber);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.08em;
+  }
+
+  .design-step-text {
+    font-family: var(--body);
+    font-size: 0.88rem;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+
+  /* QUICKSTART */
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+    max-width: 700px;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .terminal-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--border-bright);
+  }
+
+  .terminal-title {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-left: 0.5rem;
+  }
+
+  .terminal-body {
+    padding: 1.5rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 2;
+    color: var(--muted2);
+  }
+
+  .terminal-body .cmd { color: var(--white); }
+  .terminal-body .comment { color: var(--muted); }
+  .terminal-body .out { color: var(--green); }
+  .terminal-body .prompt { color: var(--amber); user-select: none; }
+
+  /* ADAPTERS */
+  .adapters-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    .adapters-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 500px) {
+    .adapters-grid { grid-template-columns: 1fr; }
+  }
+
+  .adapter-card {
+    padding: 2rem 1.5rem;
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .adapter-card:last-child { border-right: none; }
+
+  @media (max-width: 900px) {
+    .adapter-card:nth-child(2) { border-right: none; }
+    .adapter-card:nth-child(1), .adapter-card:nth-child(2) { border-bottom: 1px solid var(--border); }
+  }
+
+  .adapter-card:hover { background: var(--surface); }
+
+  .adapter-name {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .adapter-adds {
+    font-family: var(--body);
+    font-size: 0.82rem;
+    color: var(--muted2);
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 4rem clamp(1.5rem, 8vw, 8rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+  }
+
+  @media (max-width: 768px) {
+    footer { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  .footer-left {}
+
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .footer-logo span { color: var(--red); }
+
+  .footer-tagline {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-built {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .footer-built strong { color: var(--white); display: block; margin-bottom: 0.3rem; font-size: 0.85rem; }
+
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); }
+
+  /* UTILITY */
+  .mono { font-family: var(--mono); }
+  .highlight-red { color: var(--red); }
+  .highlight-green { color: var(--green); }
+  .highlight-amber { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">ZERO<span>SLOP</span></a>
+  <div class="nav-links">
+    <a href="#pipeline">Pipeline</a>
+    <a href="#gates">Gates</a>
+    <a href="#quickstart">Install</a>
+    <a href="https://github.com/hotaro6754/ZeroSlop" class="nav-cta" target="_blank" rel="noopener">→ GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">Dev Methodology</div>
+  <h1 class="hero-headline">
+    NO MORE<br><span class="strike">SLOP</span>
+  </h1>
+  <div class="hero-story">
+    <p>You spend 20 hours building. The UI looks clean. The features are there. The demo flow is rehearsed. The judge walks over. You click the button.</p>
+    <p><strong>Nothing happens.</strong></p>
+    <p>Three hackathons. Every project vibecoded. Every demo broke when it mattered. Not because AI is bad at building. Because AI has no judgment about what it builds. It ships. It calls things done. It moves on.</p>
+  </div>
+  <div class="hero-actions">
+    <a href="https://github.com/hotaro6754/ZeroSlop" class="btn-primary" target="_blank" rel="noopener">→ Clone the Repo</a>
+    <a href="#pipeline" class="btn-ghost">See the pipeline ↓</a>
+  </div>
+  <div class="hero-scroll-hint">Scroll</div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-label" data-index="01">The Problem</div>
+  <h2 class="section-title reveal">What actually happens<br>when you vibe code</h2>
+  <div class="problem-grid reveal">
+    <div class="problem-col">
+      <div class="problem-col-header fail">WITHOUT ZEROSLOP — 38/100</div>
+      <div class="failure-item"><span class="marker">×</span>Form submits to nowhere — no handler, no DB write, just silence</div>
+      <div class="failure-item"><span class="marker">×</span>Backend built. Frontend built. Never wired together.</div>
+      <div class="failure-item"><span class="marker">×</span>Works on your machine. <code>localhost</code> hardcoded in a config value the AI invented.</div>
+      <div class="failure-item"><span class="marker">×</span>Leaderboard showing numbers. Fake numbers. The table was never created.</div>
+      <div class="failure-item"><span class="marker">×</span>Auth session variable the AI made up — your actual one is two files away, unused.</div>
+      <div class="failure-item"><span class="marker">×</span>API keys hardcoded in the frontend. Right there in devtools.</div>
+      <div class="failure-item"><span class="marker">×</span>CSRF tokens on zero forms.</div>
+      <div class="failure-item"><span class="marker">×</span>Inter font. Purple gradient on white. Identical to every other team.</div>
+      <div class="failure-item"><span class="marker">×</span>AI said it was done. Confidently. No caveats.</div>
+    </div>
+    <div class="problem-col">
+      <div class="problem-col-header pass">WITH ZEROSLOP — 91/100</div>
+      <div class="pass-item"><span class="marker">✓</span>Uses existing <code>getDB()</code> from <code>config.php</code></div>
+      <div class="pass-item"><span class="marker">✓</span>Uses <code>$_SESSION['roll_no']</code> exactly as auth pattern shows</div>
+      <div class="pass-item"><span class="marker">✓</span>References actual table columns: roll_no, full_name, email, password_hash, branch, batch</div>
+      <div class="pass-item"><span class="marker">✓</span>Category design system applied — not defaults</div>
+      <div class="pass-item"><span class="marker">✓</span>CSRF token, PDO prepared statements throughout</div>
+      <div class="pass-item"><span class="marker">✓</span>Calls existing <code>createNotification()</code> for welcome alert</div>
+      <div class="pass-item"><span class="marker">✓</span>Calls existing <code>awardPoints()</code> for registration gamification</div>
+      <div class="pass-item"><span class="marker">✓</span>5 visible states on every input field</div>
+      <div class="pass-item"><span class="marker">✓</span>Mobile verified at 375px</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IT IS -->
+<section id="what">
+  <div class="section-label" data-index="02">What It Is</div>
+  <h2 class="section-title reveal">Two pastes.<br>Total transformation.</h2>
+  <p class="reveal" style="font-size:1rem; color:var(--muted2); max-width:560px; line-height:1.8; margin-bottom:3rem; font-family:var(--body);">Not a SaaS. Not a CLI tool. Not a wrapper. You clone the repo. The AI reads the files. From that point it operates with a full pipeline — quality gates, self-scoring, design intelligence, codebase grounding — running on <em>everything</em> it builds.</p>
+  <div class="pastes-wrapper reveal">
+    <div class="paste-block">
+      <div class="paste-num">PASTE 01</div>
+      <div class="paste-title">zeroslop loads into your AI session</div>
+      <div class="paste-desc">Generic assistant → full development pipeline. <strong>Quality gates, self-scoring, and design intelligence activated.</strong></div>
+      <div class="paste-arrow">→</div>
+    </div>
+    <div class="paste-block">
+      <div class="paste-num">PASTE 02</div>
+      <div class="paste-title">Your codebase loads → GROUNDED MODE</div>
+      <div class="paste-desc">AI builds YOUR code — not invented code. <strong>Your functions. Your session keys. Your table names. Never invents them.</strong></div>
+      <div class="paste-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- CORE LOOP / SCORECARD -->
+<section id="score">
+  <div class="section-label" data-index="03">Core Loop</div>
+  <h2 class="section-title reveal">Build → Score → Fail → Rebuild</h2>
+  <div class="scorecard-section">
+    <div>
+      <div class="score-toggle-wrap reveal">
+        <button class="score-toggle pass-btn active" onclick="setScore('pass')">PASS — 91/100</button>
+        <button class="score-toggle fail-btn" onclick="setScore('fail')">FAIL — 38/100</button>
+      </div>
+      <div class="scorecard reveal" id="scoreCard">
+        <div class="scorecard-topbar">
+          <span class="scorecard-title">ZEROSLOP SELF-SCORE</span>
+          <span class="scorecard-feature">User Registration Form</span>
+        </div>
+        <div class="score-rows">
+          <div class="score-row">
+            <span class="score-label">Backend</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="barBackend" style="background:var(--amber)"></div></div>
+            <span class="score-val" id="valBackend">—/25</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Frontend</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="barFrontend"></div></div>
+            <span class="score-val" id="valFrontend">—/20</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Data</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="barData"></div></div>
+            <span class="score-val" id="valData">—/15</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Connect</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="barConnect"></div></div>
+            <span class="score-val" id="valConnect">—/15</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Quality</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="barQuality"></div></div>
+            <span class="score-val" id="valQuality">—/15</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Evidence</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="barEvidence"></div></div>
+            <span class="score-val" id="valEvidence">—/10</span>
+          </div>
+        </div>
+        <div class="scorecard-total">
+          <span class="total-label">TOTAL</span>
+          <span class="total-value" id="totalValue">—</span>
+        </div>
+        <div class="scorecard-verdict pass" id="scoreVerdict">GATE: PASS — SHIP IT</div>
+        <div class="scorecard-notes" id="scoreNotes">
+          All inputs validated. Auth pattern consistent with codebase. CSRF token present. No hardcoded credentials. Mobile verified.
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <p style="font-size:1rem; color:var(--muted2); line-height:1.8; font-family:var(--body); margin-bottom:1.5rem;">After every feature, the AI scores its own output across six dimensions.</p>
+      <p style="font-size:1rem; color:var(--muted2); line-height:1.8; font-family:var(--body); margin-bottom:1.5rem;"><strong style="color:var(--red);">Below 70 = rebuild. Not a patch. Rebuild.</strong></p>
+      <p style="font-size:1rem; color:var(--muted2); line-height:1.8; font-family:var(--body);">This sounds obvious. No AI tool enforces it without zeroslop. They patch. They bandage. They keep adding to broken foundations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline">
+  <div class="section-label" data-index="04">The Pipeline</div>
+  <h2 class="section-title reveal">8-Stage pipeline.<br>Nothing skipped.</h2>
+  <div class="pipeline-list reveal">
+    <div class="pipeline-item">
+      <div class="pipeline-num">01</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">COLD-READ</div>
+        <div class="pipeline-desc">Ingests your entire codebase DNA: schema, utilities, conventions, dead zones, auth pattern. Enters GROUNDED MODE.</div>
+      </div>
+      <div class="pipeline-output">Your functions. Your session keys. Your table names. Never invents them.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">02</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">SCOUT</div>
+        <div class="pipeline-desc">Researches competitors, GitHub alternatives, APIs, market gaps. Produces intelligence report before a single line is written.</div>
+      </div>
+      <div class="pipeline-output">MARKET-INTEL report. You know the landscape before you build.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">02b</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">DESIGN-SCOUT</div>
+        <div class="pipeline-desc">Detects your product category. Studies reference-class design. Reviews your existing UI. Finds every flaw.</div>
+      </div>
+      <div class="pipeline-output">Locked design system: exact CSS variables, font pair, component specs, motion profile.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">03</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">VALIDATE</div>
+        <div class="pipeline-desc">Competitive matrix. Moat check. Honest verdict before you commit your next 20 hours.</div>
+      </div>
+      <div class="pipeline-output">BUILD / PIVOT / STOP</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">04</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">INTERROGATE</div>
+        <div class="pipeline-desc">Max 7 surgical questions. Each unlocks a specific architecture decision. Binary options — A changes 3 files, B changes 12.</div>
+      </div>
+      <div class="pipeline-output">No questions about business models. Only what changes real code.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">05</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">RATE</div>
+        <div class="pipeline-desc">Full requirement scoring before line one. Complexity, feasibility, risks, phase plan.</div>
+      </div>
+      <div class="pipeline-output">No "I didn't realize this would take 3 weeks" at week 3.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">06</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">ORCHESTRATE</div>
+        <div class="pipeline-desc">Agent dependency graph. DB → AUTH → BACKEND → UI → SECURITY → QA → FINE-TUNE. Nothing starts until its dependency gates.</div>
+      </div>
+      <div class="pipeline-output">Nothing ships without passing every gate in sequence.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">07</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">EXECUTE</div>
+        <div class="pipeline-desc">Builds under strict rules. No stubs. No TODOs. No hardcoded credentials. Backend before frontend. Every DB query uses prepared statements.</div>
+      </div>
+      <div class="pipeline-output">Shippable output. Every time.</div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-num">08</div>
+      <div class="pipeline-content">
+        <div class="pipeline-stage-name">FINE-TUNE</div>
+        <div class="pipeline-desc">Repo-aware consistency pass. The 1000x layer.</div>
+      </div>
+      <div class="pipeline-output">New code becomes indistinguishable from code that's been in the project for 6 months.</div>
+    </div>
+  </div>
+</section>
+
+<!-- GATES -->
+<section id="gates">
+  <div class="section-label" data-index="05">Quality Gates</div>
+  <h2 class="section-title reveal">Four gates.<br>No exceptions.</h2>
+  <div class="gates-grid reveal">
+    <div class="gate-card">
+      <div class="gate-header">
+        <div class="gate-icon">CG</div>
+        <div class="gate-name">Completeness Gate</div>
+        <div class="gate-status">REQUIRED</div>
+      </div>
+      <ul class="gate-checks">
+        <li>Every input has a destination</li>
+        <li>Every button does something real</li>
+        <li>Every route returns something</li>
+        <li>Every error is handled visibly</li>
+        <li>At least 3 edge cases identified and handled</li>
+      </ul>
+    </div>
+    <div class="gate-card">
+      <div class="gate-header">
+        <div class="gate-icon">SG</div>
+        <div class="gate-name">Security Gate</div>
+        <div class="gate-status">REQUIRED</div>
+      </div>
+      <ul class="gate-checks">
+        <li>CSRF on all forms</li>
+        <li>PDO prepared statements on all queries</li>
+        <li>No hardcoded credentials anywhere</li>
+        <li>Auth enforced on all protected routes</li>
+        <li>IDOR checks on user-owned data</li>
+      </ul>
+    </div>
+    <div class="gate-card">
+      <div class="gate-header">
+        <div class="gate-icon">DG</div>
+        <div class="gate-name">Design Gate</div>
+        <div class="gate-status">REQUIRED</div>
+      </div>
+      <ul class="gate-checks">
+        <li>Color system compliant</li>
+        <li>Typography locked to brief</li>
+        <li>Components match spec</li>
+        <li>Zero slop flags</li>
+        <li>Mobile verified at 375px</li>
+        <li>Signature element present — not generic</li>
+      </ul>
+    </div>
+    <div class="gate-card">
+      <div class="gate-header">
+        <div class="gate-icon">RG</div>
+        <div class="gate-name">Regression Gate</div>
+        <div class="gate-status">REQUIRED</div>
+      </div>
+      <ul class="gate-checks">
+        <li>New feature didn't break old features</li>
+        <li>Schema changes didn't orphan queries</li>
+        <li>Auth system still intact</li>
+        <li>Navigation still works end to end</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN INTEL -->
+<section id="design">
+  <div class="section-label" data-index="06">Design Intelligence</div>
+  <h2 class="section-title reveal">Not Inter.<br>Not purple.</h2>
+  <p class="reveal" style="font-size:1rem; color:var(--muted2); max-width:560px; line-height:1.8; font-family:var(--body); margin-bottom:2rem;">Most AI frontend output is identical. Same Inter. Same purple gradient. Same cards. DESIGN-SCOUT fixes this permanently by studying reference-class design for your actual product category.</p>
+  <div class="design-steps reveal">
+    <div class="design-step">
+      <div class="design-step-num">1</div>
+      <div class="design-step-content">
+        <div class="design-step-title">Category Detection</div>
+        <div class="design-step-text">Detects your product category — AI SaaS, Fintech, Healthcare, Campus platform, and more.</div>
+      </div>
+    </div>
+    <div class="design-step">
+      <div class="design-step-num">2</div>
+      <div class="design-step-content">
+        <div class="design-step-title">Reference Study</div>
+        <div class="design-step-text">Studies modal.com, fey.com, antimetal.com, composio.dev, silnahealth.com, and 40+ others — organized by product category.</div>
+      </div>
+    </div>
+    <div class="design-step">
+      <div class="design-step-num">3</div>
+      <div class="design-step-content">
+        <div class="design-step-title">UI Critique</div>
+        <div class="design-step-text">Reviews your existing UI against that standard. Runs a 12-dimension critique — specific, surgical, not "make it more modern."</div>
+      </div>
+    </div>
+    <div class="design-step">
+      <div class="design-step-num">4</div>
+      <div class="design-step-content">
+        <div class="design-step-title">Locked Design System</div>
+        <div class="design-step-text">Produces exact CSS variables, font pair, component specs, motion profile. UI-AGENT builds from brief, not from defaults.</div>
+      </div>
+    </div>
+    <div class="design-step">
+      <div class="design-step-num">5</div>
+      <div class="design-step-content">
+        <div class="design-step-title">Enforced Build</div>
+        <div class="design-step-text">Every component built against the locked brief. Zero exceptions. The DESIGN-GATE catches anything that slips through.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADAPTERS -->
+<section id="adapters">
+  <div class="section-label" data-index="07">Adapters</div>
+  <h2 class="section-title reveal">Wraps what<br>you already use.</h2>
+  <div class="adapters-grid reveal">
+    <div class="adapter-card">
+      <div class="adapter-name">CURSOR</div>
+      <div class="adapter-adds">Adds COLD-READ + FINE-TUNE layer on top of Cursor's native flow.</div>
+    </div>
+    <div class="adapter-card">
+      <div class="adapter-name">SUPERPOWERS</div>
+      <div class="adapter-adds">Adds quality gates after each skill execution.</div>
+    </div>
+    <div class="adapter-card">
+      <div class="adapter-name">GSD</div>
+      <div class="adapter-adds">Adds gates between each phase of the GSD workflow.</div>
+    </div>
+    <div class="adapter-card">
+      <div class="adapter-name">STANDALONE</div>
+      <div class="adapter-adds">Full pipeline with any AI — Claude, GPT-4, Gemini. No other tooling required.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUICKSTART -->
+<section id="quickstart">
+  <div class="section-label" data-index="08">Quick Start</div>
+  <h2 class="section-title reveal">Clone. Paste.<br>Done.</h2>
+  <div class="terminal reveal">
+    <div class="terminal-bar">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <span class="terminal-title">bash — zeroslop install</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="comment"># 1. Clone into your IDE workspace</span></div>
+      <div><span class="prompt">$ </span><span class="cmd">git clone https://github.com/hotaro6754/ZeroSlop.git</span></div>
+      <div><span class="out">Cloning into 'ZeroSlop'...</span></div>
+      <br>
+      <div><span class="comment"># 2. Copy BOOT.md to clipboard</span></div>
+      <div><span class="prompt">$ </span><span class="cmd">cat ZeroSlop/BOOT.md | pbcopy</span><span class="comment">          # macOS</span></div>
+      <div><span class="prompt">$ </span><span class="cmd">cat ZeroSlop/BOOT.md | xclip -sel clip</span><span class="comment">   # Linux</span></div>
+      <br>
+      <div><span class="comment"># 3. Open new AI session (Claude / GPT-4 / Gemini / Cursor)</span></div>
+      <div><span class="comment">#    Paste BOOT.md → paste your codebase or idea</span></div>
+      <br>
+      <div><span class="out">✓ zeroslop loaded. GROUNDED MODE ready.</span></div>
+    </div>
+  </div>
+  <p style="margin-top:1.5rem; font-family:var(--mono); font-size:0.75rem; color:var(--muted); line-height:1.8;">No CLI. No configuration. No setup beyond cloning.<br>BOOT.md contains embedded versions of all protocols. One file is enough to start.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">ZERO<span>SLOP</span></div>
+    <div class="footer-tagline">no more slop. ship real things.</div>
+    <div class="footer-links">
+      <a href="https://github.com/hotaro6754/ZeroSlop" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/hotaro6754/ZeroSlop/issues" target="_blank" rel="noopener">Issues</a>
+      <a href="https://github.com/hotaro6754/ZeroSlop/blob/main/BOOT.md" target="_blank" rel="noopener">BOOT.md</a>
+      <a href="https://github.com/hotaro6754/ZeroSlop/tree/main/core" target="_blank" rel="noopener">Core</a>
+    </div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-built">
+      <strong>Built by Harshith Gangaraju</strong>
+      Three hackathons. Everything vibecoded. Judge walks over, something breaks. Spent a long time blaming the prompts. The prompts were fine. The AI just had no mechanism to check whether what it built actually worked.
+    </div>
+    <div class="footer-copy">MIT License © Harshith Gangaraju</div>
+  </div>
+</footer>
+
+<script>
+  // INTERSECTION OBSERVER - reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Staggered failure/pass items
+  const listObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const items = entry.target.querySelectorAll('.failure-item, .pass-item');
+        items.forEach((item, i) => {
+          setTimeout(() => item.classList.add('visible'), i * 80);
+        });
+        listObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.problem-col').forEach(el => listObserver.observe(el));
+
+  // SCORECARD ANIMATION
+  const passScores = {
+    Backend: { val: 23, max: 25 },
+    Frontend: { val: 18, max: 20 },
+    Data: { val: 14, max: 15 },
+    Connect: { val: 15, max: 15 },
+    Quality: { val: 13, max: 15 },
+    Evidence: { val: 8, max: 10 }
+  };
+
+  const failScores = {
+    Backend: { val: 8, max: 25 },
+    Frontend: { val: 10, max: 20 },
+    Data: { val: 5, max: 15 },
+    Connect: { val: 4, max: 15 },
+    Quality: { val: 7, max: 15 },
+    Evidence: { val: 4, max: 10 }
+  };
+
+  let currentMode = 'pass';
+  let scoreAnimated = false;
+
+  function animateScore(mode) {
+    const scores = mode === 'pass' ? passScores : failScores;
+    const keys = Object.keys(scores);
+    const total = Object.values(scores).reduce((a, b) => a + b.val, 0);
+    const totalEl = document.getElementById('totalValue');
+    const verdictEl = document.getElementById('scoreVerdict');
+    const notesEl = document.getElementById('scoreNotes');
+
+    keys.forEach(key => {
+      const bar = document.getElementById('bar' + key);
+      const val = document.getElementById('val' + key);
+      const pct = (scores[key].val / scores[key].max) * 100;
+      setTimeout(() => {
+        bar.style.width = pct + '%';
+        bar.style.background = mode === 'pass'
+          ? (pct > 80 ? 'var(--green)' : 'var(--amber)')
+          : 'var(--red)';
+        val.textContent = scores[key].val + '/' + scores[key].max;
+      }, 200);
+    });
+
+    // animate total counter
+    let count = 0;
+    totalEl.classList.toggle('low', mode === 'fail');
+    const interval = setInterval(() => {
+      count += mode === 'pass' ? 3 : 2;
+      if (count >= total) { count = total; clearInterval(interval); }
+      totalEl.textContent = count + '/100';
+    }, 25);
+
+    if (mode === 'pass') {
+      verdictEl.textContent = 'GATE: PASS — SHIP IT';
+      verdictEl.className = 'scorecard-verdict pass';
+      notesEl.textContent = 'All inputs validated. Auth pattern consistent with codebase. CSRF token present. No hardcoded credentials. Mobile verified.';
+    } else {
+      verdictEl.textContent = 'GATE: FAIL — REBUILD';
+      verdictEl.className = 'scorecard-verdict fail';
+      notesEl.textContent = 'DB schema invented. Session variable mismatch. No CSRF. Password hardcoded in handler. No error states.';
+    }
+  }
+
+  function setScore(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.score-toggle').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // reset bars
+    ['Backend','Frontend','Data','Connect','Quality','Evidence'].forEach(key => {
+      document.getElementById('bar' + key).style.width = '0%';
+      document.getElementById('val' + key).textContent = '—/' + (passScores[key].max);
+    });
+    document.getElementById('totalValue').textContent = '—';
+
+    setTimeout(() => animateScore(mode), 100);
+  }
+
+  // auto-animate when card comes into view
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !scoreAnimated) {
+        scoreAnimated = true;
+        setTimeout(() => animateScore('pass'), 400);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const card = document.getElementById('scoreCard');
+  if (card) cardObserver.observe(card);
+</script>
+
+</body>
+</html>
