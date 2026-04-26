@@ -288,3 +288,4 @@ zeroslop is the system I built so it never happens again. To me or anyone else.
 ---
 
 *zeroslop — no more slop. ship real things.*
+https://hotaro6754.github.io/ZeroSlop/
